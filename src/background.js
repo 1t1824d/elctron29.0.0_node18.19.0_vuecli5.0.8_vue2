@@ -40,7 +40,7 @@ async function createWindow() {
   ipcMain.on('set-title', (event, title) => {
     const webContents = event.sender
     console.log(`接收到渲染进程消息：`,title );
-    event.reply('update-counter', Math.round(Math.random() * 100))
+    event.reply('update-counter', title)
   })
   const menu = Menu.buildFromTemplate([
     {
