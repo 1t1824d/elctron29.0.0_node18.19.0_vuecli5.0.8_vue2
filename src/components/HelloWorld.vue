@@ -9,7 +9,7 @@
 export default {
   data(){
     return{
-      ShowData
+      ShowData:0
     }
   },
   methods: {
