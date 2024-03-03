@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, protocol, BrowserWindow, ipcMain ,Menu} from 'electron'
+import { app, protocol, BrowserWindow, ipcMain, Menu } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 // import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== 'production'
@@ -15,21 +15,19 @@ async function createWindow() {
   const win = new BrowserWindow({
     width: 800,
     height: 600,
-  // 指定预加载脚本
-  webPreferences: {
-    // 设置预加载脚本
-    preload: path.join(__dirname, "preload.js"),
-     // 启用上下文隔离
-     contextIsolation: true,
-     // 禁用 Node.js 集成，因为我们将通过预加载脚本来提供所需的功能
-     nodeIntegration: false,
-     // 禁用 remote 模块，出于安全考虑
-     enableRemoteModule: false,
-     
-},
+    // 指定预加载脚本
+    webPreferences: {
+      // 启用上下文隔离
+      contextIsolation: true,
+      // 禁用 Node.js 集成，因为我们将通过预加载脚本来提供所需的功能
+      nodeIntegration: false,
+      // 禁用 remote 模块，出于安全考虑
+      enableRemoteModule: false,
+      // 设置预加载脚本
+      preload: path.join(__dirname, "preload.js"),
+    },
 
     // webPreferences: {
-
     //   // Use pluginOptions.nodeIntegration, leave this alone
     //   // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
     //   nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
@@ -39,25 +37,9 @@ async function createWindow() {
   ///////////////////////////////
   ipcMain.on('set-title', (event, title) => {
     const webContents = event.sender
-    console.log(`接收到渲染进程消息：`,title );
+    console.log(`接收到渲染进程消息：`, title);
     event.reply('update-counter', title)
   })
-  const menu = Menu.buildFromTemplate([
-    {
-      label: app.name,
-      submenu: [
-        {
-          click: () => win.webContents.send('update-counter', '主进程1'),
-          label: 'Increment'
-        },
-        {
-          click: () => win.webContents.send('update-counter', '主进程-1'),
-          label: 'Decrement'
-        }
-      ]
-    }
-  ])
-  Menu.setApplicationMenu(menu)
   console.log(`path.join(__dirname, "preload.js")`, path.join(__dirname, "preload.js"));
   ///////////////////////////////////
 
@@ -91,19 +73,17 @@ app.on('activate', () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
-  if (isDevelopment && !process.env.IS_TEST) {
-    // Install Vue Devtools
-    try {
-      //await installExtension(VUEJS_DEVTOOLS)
-    } catch (e) {
-      console.error('Vue Devtools failed to install:', e.toString())
-    }
-  }
+  // if (isDevelopment && !process.env.IS_TEST) {
+  //   // Install Vue Devtools
+  //   try {
+  //     //await installExtension(VUEJS_DEVTOOLS)
+  //   } catch (e) {
+  //     console.error('Vue Devtools failed to install:', e.toString())
+  //   }
+  // }
   createWindow()
 })
 
-
-///////////////
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {
   if (process.platform === 'win32') {
